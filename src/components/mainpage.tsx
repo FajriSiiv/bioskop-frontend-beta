@@ -73,6 +73,13 @@ const Mainpage = () => {
           </div>
         );
       })}
+
+      <Link
+        to={"/new-movie"}
+        className="py-2 px-5 rounded-md bg-emerald-500 absolute text-white bottom-5 right-5"
+      >
+        Buat Movie
+      </Link>
     </div>
   );
 };

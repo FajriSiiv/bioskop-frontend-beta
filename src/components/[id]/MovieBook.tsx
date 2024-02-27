@@ -1,5 +1,5 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { createMovieTicket } from "../../api";
 
 const dummyData = [
@@ -13,13 +13,25 @@ const dummyData = [
     __v: 0,
   },
 ];
-
 const MovieBook = () => {
   const { id } = useParams();
+
+  const DetailNull = () => {
+    return <h1 className="text-4xl font-bold">ERROR PAGE!</h1>;
+  };
+
+  if (dummyData[0]._id !== id)
+    return (
+      <div className="p-10">
+        <DetailNull />
+      </div>
+    );
+
   const seatLength =
     dummyData[0].availableSeats.length + dummyData[0].bookedSeats.length;
+
   return (
-    <div className="p-10">
+    <div className="p-10 ">
       <h1 className="text-center text-3xl font-bold mb-5">
         {dummyData[0].title}
       </h1>
@@ -31,6 +43,14 @@ const MovieBook = () => {
         <div className="flex gap-2 items-center">
           <div className="h-5 w-5 bg-emerald-500"></div>
           <span>Tempat duduk tersedia</span>
+        </div>
+        <div className="">
+          <Link
+            to={"/"}
+            className="absolute top-5 left-3 bg-rose-500 text-white  py-1 px-2 rounded-md"
+          >
+            Kembali
+          </Link>
         </div>
       </div>
       <div className="grid grid-cols-5 gap-2">
