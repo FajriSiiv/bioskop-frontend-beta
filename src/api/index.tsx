@@ -38,7 +38,7 @@ export const createMovie = async ({ seats, title, genre }: any) => {
 };
 
 // TICKET
-export const createMovieTicket = async (id, seatNumber) => {
+export const createMovieTicket = async (id: any, seatNumber: any) => {
   try {
     const response = await fetch(urlAPI + `ticket`, {
       method: "POST",
