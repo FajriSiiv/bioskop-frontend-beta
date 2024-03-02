@@ -17,24 +17,23 @@ const dummyData = [
 const Mainpage = () => {
   const [movie, setMovie] = useState<any>(null);
 
+  const fetchData = async () => {
+    const data = await getAPIMovie();
+
+    setMovie(data);
+    console.log(movie);
+  };
   useEffect(() => {
-    const fetchData = async () => {
-      const data = await getAPIMovie();
-
-      setMovie(data);
-      console.log(movie);
-    };
-
     fetchData();
   }, []);
 
   return (
     <div className="flex gap-3 flex-start">
-      {dummyData?.map((movieSet: any) => {
-        let timeNow = new Date("2024-02-26T10:34:09.772Z");
-        let date = new Date();
+      {movie?.map((movieSet: any) => {
+        let timeNow = new Date();
+        let date = new Date(movieSet.showtime);
         let milisecond = date.getTime() - timeNow.getTime();
-        let minutes = Math.abs(Math.floor(milisecond / (1000 * 60)));
+        let minutes = Math.abs(Math.round(milisecond / (1000 * 60)));
 
         return (
           <div

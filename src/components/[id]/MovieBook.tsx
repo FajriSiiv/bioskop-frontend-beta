@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { createMovieTicket } from "../../api";
+import { createMovieTicket, getAPIMovie } from "../../api";
 
 const dummyData = [
   {
@@ -13,22 +13,39 @@ const dummyData = [
     __v: 0,
   },
 ];
+
 const MovieBook = () => {
   const { id } = useParams();
+  const [movie, setMovie] = useState<any>(null);
+  const [seatLength, setSeatLength] = useState(0);
+  const [loading, setLoading] = useState(false);
 
   const DetailNull = () => {
     return <h1 className="text-4xl font-bold">ERROR PAGE!</h1>;
   };
 
-  if (dummyData[0]._id !== id)
-    return (
-      <div className="p-10">
-        <DetailNull />
-      </div>
-    );
+  const fetchData = async () => {
+    setLoading(true);
 
-  const seatLength =
-    dummyData[0].availableSeats.length + dummyData[0].bookedSeats.length;
+    try {
+      const data = await getAPIMovie();
+      setMovie(data);
+      setSeatLength(
+        data[0]?.availableSeats.length + data[0]?.bookedSeats.length
+      );
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  if (loading) return <div className="p-10">Loading...</div>;
+
+  console.log(movie);
 
   return (
     <div className="p-10 ">
@@ -53,11 +70,13 @@ const MovieBook = () => {
           </Link>
         </div>
       </div>
+
+      {!movie && <DetailNull />}
       <div className="grid grid-cols-5 gap-2">
         {[...Array(seatLength)].map((_, index) => {
           const seatNumber = index + 1;
-          const isAvailable = dummyData[0].availableSeats.includes(seatNumber);
-          const isBooked = dummyData[0].bookedSeats.includes(seatNumber);
+          const isAvailable = movie[0].availableSeats.includes(seatNumber);
+          const isBooked = movie[0].bookedSeats.includes(seatNumber);
           let seatColorClass = "";
 
           if (isAvailable) {
@@ -76,8 +95,19 @@ const MovieBook = () => {
               {isAvailable && (
                 <button
                   className="absolute bottom-2 left-3 bg-white py-1 px-2 rounded-sm"
-                  onClick={() => {
-                    createMovieTicket(dummyData[0]._id, [index]);
+                  onClick={async () => {
+                    try {
+                      setLoading(true);
+                      await createMovieTicket(movie[0]._id, [index + 1]);
+                      setLoading(false);
+
+                      fetchData();
+                    } catch (error) {
+                      console.error(
+                        "Terjadi kesalahan saat membuat tiket:",
+                        error
+                      );
+                    }
                   }}
                 >
                   Pesan Kursi
@@ -86,15 +116,6 @@ const MovieBook = () => {
             </div>
           );
         })}
-
-        {/* <button
-          className="absolute bottom-5 right-3 bg-emerald-500 py-3 px-10 rounded-sm text-white"
-          onClick={() => {
-            createMovieTicket(dummyData[0]._id, [index]);
-          }}
-        >
-          Pesan Banyak Kursi
-        </button> */}
       </div>
     </div>
   );

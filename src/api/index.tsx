@@ -1,5 +1,3 @@
-import { useNavigate, useNavigation } from "react-router-dom";
-
 let urlAPI = "https://server-bioskop.vercel.app/";
 
 // MOVIE
@@ -15,29 +13,26 @@ export const getAPIMovie = async () => {
 
 export const createMovie = async ({ seats, title, genre }: any) => {
   console.log(seats, title, genre);
-  // const navigate = useNavigate();
 
   try {
-    // const response = await fetch(urlAPI + `movie`, {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify({
-    //     seats: seats,
-    //     title:title,
-    //     genre:genre,
-    //   }),
-    // });
-    // if (!response.ok) {
-    //   throw new Error("Gagal membuat tiket film");
-    // }
-    // return await response.json();
-    setTimeout(() => {
-      window.location.href = "/";
-    }, 5000);
+    const response = await fetch(urlAPI + `movie`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        seat: seats,
+        title: title,
+        genre: genre,
+      }),
+    });
+    if (!response.ok) {
+      throw new Error("Gagal membuat tiket film");
+    }
+
+    return await response.json();
   } catch (error) {
-    // console.error("Terjadi kesalahan:", error.message);
+    console.error("Terjadi kesalahan:", error);
     throw new Error("Gagal membuat tiket film");
   }
 };
@@ -45,25 +40,24 @@ export const createMovie = async ({ seats, title, genre }: any) => {
 // TICKET
 export const createMovieTicket = async (id, seatNumber) => {
   try {
-    console.log(id, seatNumber);
-    // const response = await fetch(urlAPI + `tickets`, {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify({
-    //     seatNumber: seatNumber,
-    //     movieId: id,
-    //   }),
-    // });
+    const response = await fetch(urlAPI + `ticket`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        seatNumber: seatNumber,
+        movieId: id,
+      }),
+    });
 
-    // if (!response.ok) {
-    //   throw new Error("Gagal membuat tiket film");
-    // }
+    if (!response.ok) {
+      throw new Error("Gagal membuat tiket film");
+    }
 
-    // return await response.json();
+    return await response.json();
   } catch (error) {
-    console.error("Terjadi kesalahan:", error.message);
+    console.error("Terjadi kesalahan:", error);
     throw new Error("Gagal membuat tiket film");
   }
 };

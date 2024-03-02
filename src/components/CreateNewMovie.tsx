@@ -6,6 +6,7 @@ const CreateNewMovie = () => {
   const [title, setTitle] = useState<String>("");
   const [genre, setGenre] = useState<String>("");
   const [seats, setSeats] = useState<any>();
+  const [disableBtn, setDisableBtn] = useState(false);
 
   const navigate = useNavigate();
 
@@ -46,8 +47,13 @@ const CreateNewMovie = () => {
           <button
             onClick={() => {
               createMovie({ title, genre, seats });
+              setDisableBtn(true);
+              setTimeout(() => {
+                navigate("/");
+              }, 5000);
             }}
             className="py-2 w-full bg-emerald-500 text-white font-semibold rounded-sm"
+            disabled={disableBtn}
           >
             Buat Film
           </button>
